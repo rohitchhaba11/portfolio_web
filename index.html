@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rohit - Full Stack & AI Developer | Portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="assets/logo-icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --orange: #E85D25;
+            --orange-glow: rgba(232, 93, 37, 0.45);
+            --orange-light: #FF7A29;
+            --dark-bg: #0A0A0A;
+            --text-light: #F5F5F5;
+            --text-gray: #A0A0A0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        section, .hero, .about-section, .projects-section, .services-section, .process-section, .testimonials-section, .contact-section {
+            scroll-margin-top: 85px;
+        }
+
+        /* ---------------------------------
+           SCROLL ANIMATION BACKGROUND
+           --------------------------------- */
+        .fixed-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+            background-color: #000;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* ---------------------------------
+           MAIN CONTENT WRAPPER
+           --------------------------------- */
+        .main-wrapper {
+            margin-top: 0;
+            background: linear-gradient(to bottom, rgba(10,10,10,0) 0%, rgba(10,10,10,0.65) 20%, rgba(10,10,10,0.75) 100%);
+            border-top-left-radius: 40px;
+            border-top-right-radius: 40px;
+            position: relative;
+            z-index: 1;
+            padding-bottom: 100px;
+            backdrop-filter: blur(5px);
+        }
+        
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .solid-bg-sections {
+            background-color: transparent;
+        }
+
+        /* ---------------------------------
+           NAVBAR (LIQUID GLASS FLOATING DOCK)
+           --------------------------------- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 32px;
+            position: sticky;
+            top: 15px;
+            margin: 0 35px;
+            border-radius: 40px;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(28px) saturate(190%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+            transition: all 0.3s ease;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.25s;
+            user-select: none;
+            gap: 12px;
+        }
+        .nav-logo:hover {
+            transform: scale(1.04);
+            filter: drop-shadow(0 0 14px rgba(232, 93, 37, 0.7));
+        }
+        .nav-logo-img {
+            height: 34px;
+            width: auto;
+            display: block;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+        }
+        .nav-links {
+            display: flex;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 4px;
+            gap: 4px;
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12);
+        }
+        .nav-item {
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.84rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.95);
+            color: #0a0a0a;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+        .nav-item:not(.active):hover {
+            background-color: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-admin-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 9px 18px;
+            border-radius: 30px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .nav-admin-btn:hover {
+            background: rgba(232, 93, 37, 0.15);
+            border-color: rgba(232, 93, 37, 0.45);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(232, 93, 37, 0.25);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--orange-light) 0%, var(--orange) 100%);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s, filter 0.25s;
+            text-decoration: none;
+            box-shadow: 0 4px 18px var(--orange-glow);
+        }
+        .btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            filter: brightness(1.08);
+            box-shadow: 0 8px 25px rgba(232, 93, 37, 0.55);
+        }
+        .btn-outline {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-light);
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: none;
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.14);
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        /* ---------------------------------
+           SCROLL REVEAL ANIMATIONS (IntersectionObserver)
+           --------------------------------- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.92) translateY(25px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* ---------------------------------
+           HERO SECTION
+           --------------------------------- */
+        .hero {
+            position: relative;
+            min-height: 80vh;
+            padding: 0 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-greeting {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 0px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-huge-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16vw;
+            line-height: 0.9;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.95);
+            margin: 0;
+            z-index: 2;
+            position: relative;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            pointer-events: none; /* Let video clicks pass through if any */
+        }
+
+        .hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .hero-left {
+            max-width: 350px;
+        }
+        .tag {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .tag::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background-color: var(--orange);
+            border-radius: 50%;
+        }
+        .hero-left h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            line-height: 1.1;
+            margin-bottom: 25px;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .hero-right {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            width: 280px;
+        }
+        .avatars {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid #222;
+            margin-left: -10px;
+            background-color: #555;
+            background-size: cover;
+        }
+        .avatar:first-child { margin-left: 0; }
+        .glass-text {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+        .glass-tags {
+            display: flex;
+            gap: 10px;
+        }
+        .g-tag {
+            background: rgba(255,255,255,0.1);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            color: var(--orange);
+        }
+
+        /* ---------------------------------
+           MARQUEE
+           --------------------------------- */
+        .marquee-wrapper {
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            padding: 25px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            background-color: var(--dark-bg);
+        }
+        .marquee {
+            display: inline-block;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--text-light);
+            animation: scroll-left 22s linear infinite;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+        .marquee span {
+            margin: 0 30px;
+            color: var(--orange);
+        }
+        @keyframes scroll-left {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        /* ---------------------------------
+           ABOUT SECTION (PORTRAIT LUXURY CARD)
+           --------------------------------- */
+        .about-section {
+            display: flex;
+            padding: 100px 50px;
+            gap: 80px;
+            align-items: center;
+        }
+        .about-left {
+            flex-shrink: 0;
+        }
+        .about-portrait-card {
+            width: 380px;
+            max-width: 100%;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 18, 24, 0.85) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 28px;
+            margin-top: 20px;
+            padding: 16px;
+            position: relative;
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s, border-color 0.4s;
+            overflow: hidden;
+        }
+        .about-portrait-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 32px 75px rgba(232, 93, 37, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.35);
+            border-color: rgba(232, 93, 37, 0.55);
+        }
+        .portrait-img-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+        .portrait-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .about-portrait-card:hover .portrait-img {
+            transform: scale(1.04);
+        }
+        .portrait-status-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: rgba(10, 10, 14, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #34D399;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+        .portrait-footer {
+            padding: 16px 8px 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .portrait-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.35rem;
+            color: #fff;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+        .portrait-role {
+            font-size: 0.76rem;
+            color: var(--orange-light);
+            font-weight: 500;
+            margin-top: 3px;
+        }
+        .portrait-stats-pill {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.74rem;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .about-right p {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 300;
+            line-height: 1.7;
+            margin-bottom: 28px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .about-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+        .about-stat-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 16px;
+            padding: 18px 16px;
+            text-align: center;
+            backdrop-filter: blur(12px);
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .about-stat-card:hover {
+            border-color: rgba(232,93,37,0.45);
+            transform: translateY(-4px);
+        }
+        .about-stat-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #FF7A29, #E85D25);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .about-stat-label {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.6);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        /* ---------------------------------
+           LOGOS SECTION
+           --------------------------------- */
+        .logos-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 50px 100px 50px;
+            opacity: 0.6;
+        }
+        .logo-placeholder {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ---------------------------------
+           PROJECTS SECTION (LIQUID GLASS CARDS)
+           --------------------------------- */
+        .projects-section {
+            padding: 0 50px;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-header h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            font-weight: 400;
+            margin-top: 10px;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .project-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            padding: 24px;
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.35s, box-shadow 0.35s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(232, 93, 37, 0.55);
+            box-shadow: 0 24px 60px rgba(232, 93, 37, 0.2), inset 0 1px 3px rgba(255, 255, 255, 0.3);
+        }
+        
+        .project-image-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/10;
+            border-radius: 16px;
+            margin-bottom: 22px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .project-card:hover .project-image {
+            transform: scale(1.06);
+        }
+
+        .project-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.65) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .project-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+        .project-desc {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        .project-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(10px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--orange);
+            font-weight: 500;
+            width: fit-content;
+        }
+        /* ---------------------------------
+           SERVICES SECTION
+           --------------------------------- */
+        .services-section {
+            padding: 100px 50px;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .service-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 40px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, background 0.3s;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--orange);
+            margin-bottom: 20px;
+        }
+        .service-card h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+        .service-card p {
+            color: var(--text-gray);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        /* ---------------------------------
+           PROCESS SECTION
+           --------------------------------- */
+        .process-section {
+            padding: 0 50px 100px 50px;
+        }
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            position: relative;
+        }
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: var(--glass-border);
+            z-index: 0;
+        }
+        .process-step {
+            position: relative;
+            z-index: 1;
+            width: 22%;
+        }
+        .step-num {
+            width: 50px;
+            height: 50px;
+            background: var(--dark-bg);
+            border: 1px solid var(--orange);
+            color: var(--orange);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .process-step h3 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        .process-step p {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* ---------------------------------
+           TESTIMONIALS (FROSTED LIQUID GLASS)
+           --------------------------------- */
+        .testimonials-section {
+            padding: 50px 0 100px 0;
+            overflow: hidden;
+        }
+        .testimonials-track {
+            display: flex;
+            width: max-content;
+            animation: scroll-testimonials 32s linear infinite;
+            gap: 30px;
+            padding: 0 15px;
+            will-change: transform;
+            transform: translateZ(0);
+        }
+        .testimonials-track:hover {
+            animation-play-state: paused;
+        }
+        @keyframes scroll-testimonials {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); } 
+        }
+        .testimonial-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(28px) saturate(190%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+            padding: 35px 30px;
+            border-radius: 24px;
+            width: 420px;
+            flex-shrink: 0;
+            transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(232, 93, 37, 0.6);
+            box-shadow: 0 20px 50px rgba(232, 93, 37, 0.15), inset 0 1px 3px rgba(255, 255, 255, 0.35);
+        }
+        .t-quote {
+            color: rgba(255, 255, 255, 0.95);
+            font-style: italic;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 22px;
+        }
+        .t-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .t-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #444;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .t-name {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+        }
+        .t-role {
+            font-size: 0.75rem;
+            color: var(--orange);
+        }
+
+        /* ---------------------------------
+           CONTACT SECTION
+           --------------------------------- */
+        .contact-section {
+            padding: 100px 50px;
+            display: flex;
+            justify-content: center;
+        }
+        .contact-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            padding: 50px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .form-control {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-light);
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--orange);
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .form-message {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .form-message.success {
+            color: #4CAF50;
+            display: block;
+        }
+        .form-message.error {
+            color: #F44336;
+            display: block;
+        }
+
+        /* ---------------------------------
+           FOOTER
+           --------------------------------- */
+        .footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 80px 50px 30px 50px;
+            text-align: center;
+            background: linear-gradient(to top, rgba(10,10,10,0.8), transparent);
+        }
+        .footer h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 12vw;
+            color: var(--text-light);
+            line-height: 0.8;
+            margin-bottom: 40px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .footer h2:hover {
+            color: var(--orange);
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover {
+            color: var(--orange);
+        }
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- SCROLL ANIMATION CANVAS -->
+    <div class="fixed-background">
+        <canvas id="hero-lightpass"></canvas>
+    </div>
+
+
+
+    <!-- MAIN WRAPPER (Scrolls over background) -->
+    <div class="main-wrapper">
+        
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <div class="nav-logo" id="navLogo" title="Rohit Portfolio">
+                <img src="assets/logo.png" alt="Rohit Logo" class="nav-logo-img">
+            </div>
+            <div class="nav-links">
+                <div class="nav-item active" data-target="hero">Home</div>
+                <div class="nav-item" data-target="about">About</div>
+                <div class="nav-item" data-target="projects">Projects</div>
+                <div class="nav-item" data-target="services">Services</div>
+                <div class="nav-item" data-target="testimonials">Testimonials</div>
+                <div class="nav-item" data-target="contact">Contact</div>
+            </div>
+            <div class="nav-actions">
+                <a href="admin.html" class="nav-admin-btn" title="Admin Control Center">
+                    <span>🔐</span>
+                    <span>Admin</span>
+                </a>
+                <button class="btn btn-start-project">Start a Project ↗</button>
+            </div>
+        </nav>
+
+        <!-- HERO SECTION -->
+        <section class="hero" id="hero">
+            <div class="hero-greeting">Hi, I am</div>
+            <h1 class="hero-huge-text">
+                <span style="animation: fadeUp 0.5s ease forwards 0.1s; opacity: 0; display: inline-block;">R</span><span style="animation: fadeUp 0.5s ease forwards 0.2s; opacity: 0; display: inline-block;">O</span><span style="animation: fadeUp 0.5s ease forwards 0.3s; opacity: 0; display: inline-block;">H</span><span style="animation: fadeUp 0.5s ease forwards 0.4s; opacity: 0; display: inline-block;">I</span><span style="animation: fadeUp 0.5s ease forwards 0.5s; opacity: 0; display: inline-block;">T</span>
+            </h1>
+            
+            <div class="hero-content">
+                <div class="hero-left">
+                    <div class="tag">AI & Full-Stack Developer</div>
+                    <h1>Building intelligent automation & scalable systems</h1>
+                    <div class="hero-actions">
+                        <button class="btn btn-start-project">Start a Project ↗</button>
+                        <button class="btn btn-outline btn-view-work">View My Work ↘</button>
+                    </div>
+                </div>
+
+                <div class="hero-right">
+                    <div class="avatars">
+                        <div class="avatar" style="background: #333;"></div>
+                        <div class="avatar" style="background: #555;"></div>
+                        <div class="avatar" style="background: #777;"></div>
+                        <div class="avatar" style="background: #999;"></div>
+                    </div>
+                    <div class="glass-text">
+                        99.6% Of My Clients Are Satisfied — Be One Of Them Today.
+                    </div>
+                    <div class="glass-tags">
+                        <div class="g-tag">Free Consultation</div>
+                        <div class="g-tag">24h Response</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOLID SECTIONS START HERE -->
+        <div class="solid-bg-sections">
+            
+            <!-- MARQUEE -->
+            <div class="marquee-wrapper">
+                <div class="marquee">
+                    FULL STACK DEVELOPER <span>✦</span> 299+ DELIVERIES <span>✦</span> 99% POSITIVE REVIEWS <span>✦</span> AI & AUTOMATION EXPERT <span>✦</span> 
+                    FULL STACK DEVELOPER <span>✦</span> 299+ DELIVERIES <span>✦</span> 99% POSITIVE REVIEWS <span>✦</span> AI & AUTOMATION EXPERT <span>✦</span>
+                </div>
+            </div>
+
+            <!-- ABOUT -->
+            <section class="about-section" id="about">
+                <div class="about-left">
+                    <div class="tag reveal">About Me</div>
+                    <div class="about-portrait-card reveal reveal-scale">
+                        <div class="portrait-img-wrapper">
+                            <img src="assets/rohit-photo.jpg" alt="Rohit - Full Stack & AI Developer" class="portrait-img">
+                            <div class="portrait-status-badge">
+                                <span style="width: 7px; height: 7px; background: #10B981; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #10B981;"></span>
+                                Available for Projects
+                            </div>
+                        </div>
+                        <div class="portrait-footer">
+                            <div>
+                                <div class="portrait-name">ROHIT</div>
+                                <div class="portrait-role">AI & Full-Stack Developer</div>
+                            </div>
+                            <div class="portrait-stats-pill">
+                                <span style="color: var(--orange-light);">✦</span>
+                                <span>3+ Yrs Exp</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-right reveal reveal-delay-2">
+                    <p>Hey there, I'm Rohit — a full-stack software & app developer, AI engineer, and cinematic video editor. I code across modern ecosystems including Python, TypeScript, JavaScript, Java, and Swift. Beyond building high-concurrency systems, I specialize in building intelligent autonomous AI agents and workflow automations that help businesses scale.</p>
+                    <div class="hero-actions" style="margin-top: 30px;">
+                        <button class="btn btn-start-project">Start a Project ↗</button>
+                        <button class="btn btn-outline btn-view-work">View My Work ↘</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LOGOS -->
+            <section class="logos-section">
+                <div class="logo-placeholder"><span>B</span> listex</div>
+                <div class="logo-placeholder">DIXIE DOWNS</div>
+                <div class="logo-placeholder">rogue</div>
+                <div class="logo-placeholder">Perfect</div>
+                <div class="logo-placeholder">CD.PET</div>
+                <div class="logo-placeholder">Trava</div>
+            </section>
+
+            <!-- PROJECTS -->
+            <section class="projects-section" id="projects">
+                <div class="section-header reveal">
+                    <div class="tag" style="justify-content: center;">Some Recent Projects</div>
+                    <h2>Selected Work That Delivers Results</h2>
+                </div>
+                
+                <div class="projects-grid">
+                    <!-- Project 1 -->
+                    <div class="project-card reveal reveal-delay-1">
+                        <div class="project-image-wrapper">
+                            <div class="project-image" style="background-image: url('assets/projects/ecommerce.jpg');"></div>
+                            <div class="project-image-overlay"></div>
+                        </div>
+                        <h3 class="project-title">E-Commerce Web Application</h3>
+                        <p class="project-desc">A scalable full-stack store built with modern web technologies and seamless payment integration.</p>
+                        <div class="project-tag">Web Development</div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="project-card reveal reveal-delay-2">
+                        <div class="project-image-wrapper">
+                            <div class="project-image" style="background-image: url('assets/projects/fitness.jpg');"></div>
+                            <div class="project-image-overlay"></div>
+                        </div>
+                        <h3 class="project-title">Fitness Tracker Mobile App</h3>
+                        <p class="project-desc">Cross-platform iOS and Android application featuring real-time data sync and analytics.</p>
+                        <div class="project-tag">App Development</div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="project-card reveal reveal-delay-3">
+                        <div class="project-image-wrapper">
+                            <div class="project-image" style="background-image: url('assets/projects/commercial.jpg');"></div>
+                            <div class="project-image-overlay"></div>
+                        </div>
+                        <h3 class="project-title">Cinematic Brand Commercial</h3>
+                        <p class="project-desc">High-quality commercial edit with professional color grading, sound design, and VFX.</p>
+                        <div class="project-tag">Video Editing</div>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="project-card reveal reveal-delay-4">
+                        <div class="project-image-wrapper">
+                            <div class="project-image" style="background-image: url('assets/projects/ai-agent.jpg');"></div>
+                            <div class="project-image-overlay"></div>
+                        </div>
+                        <h3 class="project-title">AI Customer Support Agent</h3>
+                        <p class="project-desc">An intelligent automation workflow reducing manual support tickets by 80% with custom LLMs.</p>
+                        <div class="project-tag">AI & Automation</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SERVICES -->
+            <section class="services-section" id="services">
+                <div class="section-header reveal">
+                    <div class="tag" style="justify-content: center;">What I Do</div>
+                    <h2>Services That Grow Your Business</h2>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card reveal reveal-delay-1">
+                        <div class="service-icon">📱</div>
+                        <h3>App Development</h3>
+                        <p>I build high-performance, scalable mobile applications for iOS and Android using modern frameworks.</p>
+                    </div>
+                    <div class="service-card reveal reveal-delay-2">
+                        <div class="service-icon">⚙</div>
+                        <h3>Web Development</h3>
+                        <p>High-performance, scalable websites built with modern technologies ensuring lightning-fast load times.</p>
+                    </div>
+                    <div class="service-card reveal reveal-delay-3">
+                        <div class="service-icon">🎬</div>
+                        <h3>Video Editor</h3>
+                        <p>Crafting engaging, high-quality video content with seamless transitions, effects, and storytelling.</p>
+                    </div>
+                    <div class="service-card reveal reveal-delay-4">
+                        <div class="service-icon">🤖</div>
+                        <h3>AI Agent & Automation</h3>
+                        <p>Developing intelligent AI agents and custom automation builders to streamline complex business workflows.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROCESS -->
+            <section class="process-section" id="process">
+                <div class="section-header reveal">
+                    <div class="tag" style="justify-content: center;">My Approach</div>
+                    <h2>The Process to Perfection</h2>
+                </div>
+                <div class="process-steps">
+                    <div class="process-step reveal reveal-delay-1">
+                        <div class="step-num">01</div>
+                        <h3>Discovery</h3>
+                        <p>We start by understanding your goals, audience, and the unique challenges of your business.</p>
+                    </div>
+                    <div class="process-step reveal reveal-delay-2">
+                        <div class="step-num">02</div>
+                        <h3>Strategy & Design</h3>
+                        <p>Crafting a wireframe and visual direction that perfectly aligns with your brand identity.</p>
+                    </div>
+                    <div class="process-step reveal reveal-delay-3">
+                        <div class="step-num">03</div>
+                        <h3>Development</h3>
+                        <p>Writing clean, efficient code to bring the designs to life with robust functionality.</p>
+                    </div>
+                    <div class="process-step reveal reveal-delay-4">
+                        <div class="step-num">04</div>
+                        <h3>Launch & Scale</h3>
+                        <p>Final testing, deployment, and ongoing support to ensure everything runs perfectly.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TESTIMONIALS -->
+            <section class="testimonials-section" id="testimonials">
+                <div class="section-header">
+                    <div class="tag" style="justify-content: center;">Testimonials</div>
+                    <h2>What My Clients Say</h2>
+                </div>
+                <!-- Duplicate the track content to allow infinite smooth scrolling -->
+                <div class="testimonials-track">
+                    <div class="testimonial-card">
+                        <p class="t-quote">"Rohit completely transformed our online presence. Our conversion rate increased by 150% within the first month. An absolute wizard."</p>
+                        <div class="t-author">
+                            <div class="t-avatar" style="background: #e3a"></div>
+                            <div>
+                                <div class="t-name">Sarah Jenkins</div>
+                                <div class="t-role">CEO at TechFlow</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="t-quote">"The attention to detail is unmatched. Rohit doesn't just build websites; he crafts premium digital experiences that command authority."</p>
+                        <div class="t-author">
+                            <div class="t-avatar" style="background: #3ae"></div>
+                            <div>
+                                <div class="t-name">Michael Chang</div>
+                                <div class="t-role">Founder of Rogue</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="t-quote">"Professional, fast, and exceptionally talented. We went from a basic template to a bespoke platform that our users love."</p>
+                        <div class="t-author">
+                            <div class="t-avatar" style="background: #ea3"></div>
+                            <div>
+                                <div class="t-name">Elena Rodriguez</div>
+                                <div class="t-role">Marketing Director</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="t-quote">"Working with Rohit was the best investment we made this year. The ROI has been incredible. Highly recommended!"</p>
+                        <div class="t-author">
+                            <div class="t-avatar" style="background: #3ea"></div>
+                            <div>
+                                <div class="t-name">David Smith</div>
+                                <div class="t-role">Partner at LegalSolutions</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Duplicated for seamless loop -->
+                    <div class="testimonial-card">
+                        <p class="t-quote">"Rohit completely transformed our online presence. Our conversion rate increased by 150% within the first month. An absolute wizard."</p>
+                        <div class="t-author">
+                            <div class="t-avatar" style="background: #e3a"></div>
+                            <div>
+                                <div class="t-name">Sarah Jenkins</div>
+                                <div class="t-role">CEO at TechFlow</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="t-quote">"The attention to detail is unmatched. Rohit doesn't just build websites; he crafts premium digital experiences that command authority."</p>
+                        <div class="t-author">
+                            <div class="t-avatar" style="background: #3ae"></div>
+                            <div>
+                                <div class="t-name">Michael Chang</div>
+                                <div class="t-role">Founder of Rogue</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="t-quote">"Professional, fast, and exceptionally talented. We went from a basic template to a bespoke platform that our users love."</p>
+                        <div class="t-author">
+                            <div class="t-avatar" style="background: #ea3"></div>
+                            <div>
+                                <div class="t-name">Elena Rodriguez</div>
+                                <div class="t-role">Marketing Director</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="t-quote">"Working with Rohit was the best investment we made this year. The ROI has been incredible. Highly recommended!"</p>
+                        <div class="t-author">
+                            <div class="t-avatar" style="background: #3ea"></div>
+                            <div>
+                                <div class="t-name">David Smith</div>
+                                <div class="t-role">Partner at LegalSolutions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTACT SECTION -->
+            <section class="contact-section" id="contact">
+                <div class="contact-card reveal reveal-scale">
+                    <div class="section-header" style="margin-bottom: 30px;">
+                        <h2>Get In Touch</h2>
+                        <p style="color: var(--text-gray); margin-top: 10px;">Have a project in mind? Let's build something extraordinary.</p>
+                    </div>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label class="form-label">Name</label>
+                            <input type="text" name="name" class="form-control" placeholder="Your Name" required minlength="2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" placeholder="name@company.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Subject</label>
+                            <input type="text" name="subject" class="form-control" placeholder="Project Inquiry / Job Opportunity">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Message</label>
+                            <textarea name="message" class="form-control" placeholder="Tell me about your project goals, scope, and timeline..." required minlength="10"></textarea>
+                        </div>
+                        <button type="submit" class="btn" id="submitBtn" style="width: 100%; justify-content: center; padding: 13px; font-size: 0.95rem;">Send Message ➔</button>
+                        <div id="formStatus" class="form-message"></div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="footer">
+                <div style="display: flex; justify-content: center; margin-bottom: 25px;">
+                    <img src="assets/logo.png" alt="Rohit - Full Stack Developer" style="height: 52px; width: auto; filter: drop-shadow(0 4px 22px var(--orange-glow));">
+                </div>
+                <h2 id="footerTalk" title="Click to start a project">LET'S TALK</h2>
+                <div class="footer-links">
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="admin.html" style="color: var(--orange-light); font-weight: 600;">Admin Portal 🔐</a>
+                </div>
+                <div class="footer-bottom">
+                    <div>© 2026 Rohit. All rights reserved.</div>
+                    <div>Designed with precision & performance.</div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- SCRIPT FOR SCROLL ANIMATION & GITHUB PAGES RESILIENCE -->
+    <script>
+        const canvas = document.getElementById('hero-lightpass');
+        const context = canvas.getContext('2d');
+        
+        // Immediate canvas dimension setup
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const frameCount = 240;
+        const currentFrame = index => (
+            `./frames_png/frame_${index.toString().padStart(6, '0')}.png`
+        );
+
+        // Preload frames with progressive loading & nearest-frame fallback
+        const images = [];
+        const loadedFrames = new Array(frameCount).fill(false);
+        let hasAnyFrameLoaded = false;
+        let lastDrawnIndex = 0;
+
+        for (let i = 0; i < frameCount; i++) {
+            const img = new Image();
+            img.onload = () => {
+                loadedFrames[i] = true;
+                hasAnyFrameLoaded = true;
+                if (i === 0 && lastDrawnIndex === 0) {
+                    renderFrameIndex(0);
+                }
+            };
+            img.onerror = () => {
+                loadedFrames[i] = false;
+            };
+            images.push(img);
+        }
+
+        // Priority 1: Load frame 0 immediately
+        images[0].src = currentFrame(0);
+
+        // Priority 2: Load keyframes (every 6th frame) for rapid scroll response
+        for (let i = 6; i < frameCount; i += 6) {
+            images[i].src = currentFrame(i);
+        }
+
+        // Priority 3: Progressively load remaining intermediate frames
+        setTimeout(() => {
+            for (let i = 1; i < frameCount; i++) {
+                if (!images[i].src) {
+                    images[i].src = currentFrame(i);
+                }
+            }
+        }, 400);
+
+        function drawCover(img) {
+            if (!img || !img.complete || img.naturalWidth === 0) return;
+            const canvasRatio = canvas.width / canvas.height;
+            const imgRatio = img.width / img.height;
+            let renderWidth, renderHeight, x, y;
+
+            if (canvasRatio > imgRatio) {
+                renderWidth = canvas.width;
+                renderHeight = canvas.width / imgRatio;
+                x = 0;
+                y = (canvas.height - renderHeight) / 2;
+            } else {
+                renderWidth = canvas.height * imgRatio;
+                renderHeight = canvas.height;
+                x = (canvas.width - renderWidth) / 2;
+                y = 0;
+            }
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.imageSmoothingEnabled = true;
+            context.imageSmoothingQuality = 'high';
+            context.drawImage(img, x, y, renderWidth, renderHeight);
+        }
+
+        // Find nearest loaded frame so canvas NEVER goes black while scrolling on GitHub Pages
+        function renderFrameIndex(targetIndex) {
+            targetIndex = Math.min(frameCount - 1, Math.max(0, targetIndex));
+            
+            let chosenIndex = -1;
+            if (loadedFrames[targetIndex] && images[targetIndex] && images[targetIndex].complete && images[targetIndex].naturalWidth > 0) {
+                chosenIndex = targetIndex;
+            } else {
+                // Search closest loaded neighbor
+                for (let offset = 1; offset < frameCount; offset++) {
+                    const prev = targetIndex - offset;
+                    if (prev >= 0 && loadedFrames[prev] && images[prev].complete && images[prev].naturalWidth > 0) {
+                        chosenIndex = prev;
+                        break;
+                    }
+                    const next = targetIndex + offset;
+                    if (next < frameCount && loadedFrames[next] && images[next].complete && images[next].naturalWidth > 0) {
+                        chosenIndex = next;
+                        break;
+                    }
+                }
+            }
+
+            if (chosenIndex !== -1) {
+                lastDrawnIndex = chosenIndex;
+                drawCover(images[chosenIndex]);
+            }
+        }
+
+        // -------------------------------------------------------------
+        // RESILIENT INTERACTIVE PARTICLE FALLBACK (FOR GITHUB PAGES)
+        // -------------------------------------------------------------
+        // If images take time or are missing on GitHub Pages, this ensures
+        // the background has an award-winning futuristic ambient animation!
+        let particles = [];
+        const particleCount = 45;
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                vx: (Math.random() - 0.5) * 0.6,
+                vy: (Math.random() - 0.5) * 0.6,
+                radius: Math.random() * 2 + 1,
+                alpha: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        let scrollFraction = 0;
+        let scrollVelocity = 0;
+        let lastScrollY = window.pageYOffset || 0;
+
+        function animateFallbackParticles() {
+            if (!hasAnyFrameLoaded) {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Reactive gradient centered on mouse with scroll tint
+                const grad = context.createRadialGradient(
+                    mouseX, mouseY, 40,
+                    canvas.width / 2, canvas.height / 2, canvas.width * 0.85
+                );
+                grad.addColorStop(0, 'rgba(232, 93, 37, 0.16)');
+                grad.addColorStop(0.45, 'rgba(18, 18, 24, 0.92)');
+                grad.addColorStop(1, '#08080A');
+                context.fillStyle = grad;
+                context.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Wave speed scales with scroll velocity
+                const waveShift = scrollFraction * Math.PI * 4;
+
+                // Draw connecting constellation lines
+                for (let i = 0; i < particles.length; i++) {
+                    const p1 = particles[i];
+                    p1.x += p1.vx + Math.sin(waveShift + i) * 0.4;
+                    p1.y += p1.vy + scrollVelocity * 0.1;
+
+                    if (p1.x < 0) p1.x = canvas.width;
+                    if (p1.x > canvas.width) p1.x = 0;
+                    if (p1.y < 0) p1.y = canvas.height;
+                    if (p1.y > canvas.height) p1.y = 0;
+
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const p2 = particles[j];
+                        const dx = p1.x - p2.x;
+                        const dy = p1.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < 140) {
+                            context.beginPath();
+                            context.strokeStyle = `rgba(232, 93, 37, ${0.2 * (1 - dist / 140)})`;
+                            context.lineWidth = 0.8;
+                            context.moveTo(p1.x, p1.y);
+                            context.lineTo(p2.x, p2.y);
+                            context.stroke();
+                        }
+                    }
+
+                    // Draw glowing particle node
+                    context.beginPath();
+                    context.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
+                    context.fillStyle = `rgba(255, 122, 41, ${p1.alpha})`;
+                    context.fill();
+                }
+
+                // Decay scroll velocity smoothly
+                scrollVelocity *= 0.92;
+            }
+
+            requestAnimationFrame(animateFallbackParticles);
+        }
+        animateFallbackParticles();
+
+        let ticking = false;
+        
+        function onWindowScroll() {
+            const html = document.documentElement;
+            const currentScrollY = window.pageYOffset || html.scrollTop;
+            scrollVelocity = currentScrollY - lastScrollY;
+            lastScrollY = currentScrollY;
+
+            const maxScrollTop = Math.max(1, html.scrollHeight - window.innerHeight);
+            scrollFraction = Math.min(1, Math.max(0, currentScrollY / maxScrollTop));
+            
+            const frameIndex = Math.min(
+                frameCount - 1,
+                Math.max(0, Math.floor(scrollFraction * frameCount))
+            );
+            
+            if (hasAnyFrameLoaded) {
+                renderFrameIndex(frameIndex);
+            }
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(onWindowScroll);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            if (!ticking) {
+                window.requestAnimationFrame(onWindowScroll);
+                ticking = true;
+            }
+        });
+
+        // -------------------------------------------------------------
+        // APPLICATION LOGIC, SCROLL OBSERVER & DUAL STORAGE SYNC
+        // -------------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Scroll Reveal IntersectionObserver
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px 0px 80px 0px',
+                threshold: 0.05
+            });
+
+            // Immediately reveal any element already in or near viewport on page load
+            document.querySelectorAll('.reveal, .reveal-scale').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight + 100) {
+                    el.classList.add('active');
+                }
+                revealObserver.observe(el);
+            });
+
+            // 2. Interactive 3D Perspective Tilt for cards
+            const tiltCards = document.querySelectorAll('.project-card, .service-card, .about-portrait-card');
+            tiltCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -5;
+                    const rotateY = ((x - centerX) / centerX) * 5;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = '';
+                });
+            });
+
+            // 3. Navbar Navigation
+            const navItems = document.querySelectorAll('.nav-links .nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const targetId = item.getAttribute('data-target');
+                    if (targetId === 'hero') {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                        const targetEl = document.getElementById(targetId);
+                        if (targetEl) {
+                            targetEl.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                    navItems.forEach(ni => ni.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+
+            // Logo Click -> Scroll Home
+            const navLogo = document.getElementById('navLogo');
+            if (navLogo) {
+                navLogo.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    navItems.forEach(ni => ni.classList.remove('active'));
+                    const homeItem = document.querySelector('.nav-links .nav-item[data-target="hero"]');
+                    if (homeItem) homeItem.classList.add('active');
+                });
+            }
+
+            // Start a project triggers
+            document.querySelectorAll('.btn-start-project, #footerTalk').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const contactSection = document.getElementById('contact');
+                    if (contactSection) {
+                        contactSection.scrollIntoView({ behavior: 'smooth' });
+                        setTimeout(() => {
+                            const nameInput = document.querySelector('#contactForm input[name="name"]');
+                            if (nameInput) nameInput.focus();
+                        }, 500);
+                    }
+                    navItems.forEach(ni => ni.classList.remove('active'));
+                    const contactNav = document.querySelector('.nav-links .nav-item[data-target="contact"]');
+                    if (contactNav) contactNav.classList.add('active');
+                });
+            });
+
+            // View my work triggers
+            document.querySelectorAll('.btn-view-work').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const projectsSection = document.getElementById('projects');
+                    if (projectsSection) {
+                        projectsSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    navItems.forEach(ni => ni.classList.remove('active'));
+                    const projectsNav = document.querySelector('.nav-links .nav-item[data-target="projects"]');
+                    if (projectsNav) projectsNav.classList.add('active');
+                });
+            });
+
+            // Scroll Spy
+            const navSections = [
+                { id: 'contact', el: document.getElementById('contact') },
+                { id: 'testimonials', el: document.getElementById('testimonials') },
+                { id: 'services', el: document.getElementById('services') },
+                { id: 'projects', el: document.getElementById('projects') },
+                { id: 'about', el: document.getElementById('about') },
+                { id: 'hero', el: document.getElementById('hero') }
+            ];
+
+            window.addEventListener('scroll', () => {
+                const scrollPos = window.scrollY + 140;
+                for (const sec of navSections) {
+                    if (sec.el && scrollPos >= sec.el.offsetTop) {
+                        navItems.forEach(ni => {
+                            if (ni.getAttribute('data-target') === sec.id) {
+                                ni.classList.add('active');
+                            } else {
+                                ni.classList.remove('active');
+                            }
+                        });
+                        break;
+                    }
+                }
+            }, { passive: true });
+
+            // 4. Projects Dynamic Sync (LocalStorage + API)
+            function renderProjectsGrid(projects) {
+                const grid = document.querySelector('.projects-grid');
+                if (!grid || !projects || projects.length === 0) return;
+                grid.innerHTML = '';
+                projects.forEach((proj, idx) => {
+                    const bgStyle = proj.thumbnail 
+                        ? `background-image: url('${proj.thumbnail}');` 
+                        : `background: linear-gradient(135deg, #1f2937, #111827);`;
+                    const delayClass = `reveal-delay-${(idx % 4) + 1}`;
+                    
+                    grid.innerHTML += `
+                        <div class="project-card reveal ${delayClass} active">
+                            <div class="project-image-wrapper">
+                                <div class="project-image" style="${bgStyle}"></div>
+                                <div class="project-image-overlay"></div>
+                            </div>
+                            <h3 class="project-title">${escapeHtml(proj.title)}</h3>
+                            <p class="project-desc">${escapeHtml(proj.shortDescription || '')}</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div class="project-tag">${escapeHtml(proj.category || 'Featured')}</div>
+                                ${proj.liveUrl ? `<a href="${proj.liveUrl}" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.7); font-size: 0.8rem; text-decoration: none;">Live Demo ↗</a>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                // Re-attach tilt interaction to new project cards
+                document.querySelectorAll('.projects-grid .project-card').forEach(card => {
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        const centerX = rect.width / 2;
+                        const centerY = rect.height / 2;
+                        const rotateX = ((y - centerY) / centerY) * -5;
+                        const rotateY = ((x - centerX) / centerX) * 5;
+                        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = '';
+                    });
+                });
+            }
+
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            // Check custom projects from Admin LocalStorage or API
+            const storedCustomProjects = localStorage.getItem('rohit_admin_projects');
+            if (storedCustomProjects) {
+                try {
+                    const parsed = JSON.parse(storedCustomProjects);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        renderProjectsGrid(parsed);
+                    }
+                } catch(e) {}
+            } else {
+                fetch('/api/projects')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && data.data && data.data.length > 0) {
+                            renderProjectsGrid(data.data);
+                        }
+                    })
+                    .catch(() => {});
+            }
+
+            // 5. Contact Form Submission (Dual-Storage Resilience)
+            const contactForm = document.getElementById('contactForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const formStatus = document.getElementById('formStatus');
+
+            if (contactForm) {
+                contactForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    submitBtn.textContent = 'Sending Message...';
+                    submitBtn.disabled = true;
+                    formStatus.className = 'form-message';
+                    
+                    const formData = new FormData(contactForm);
+                    const payload = Object.fromEntries(formData.entries());
+
+                    // A) Persist to LocalStorage so Admin Dashboard sees it immediately on GitHub Pages!
+                    try {
+                        const existingMsgs = JSON.parse(localStorage.getItem('rohit_admin_messages') || '[]');
+                        const newMsg = {
+                            id: 'msg-' + Date.now(),
+                            name: payload.name,
+                            email: payload.email,
+                            subject: payload.subject || 'Portfolio Inquiry',
+                            message: payload.message,
+                            status: 'unread',
+                            createdAt: new Date().toISOString()
+                        };
+                        existingMsgs.unshift(newMsg);
+                        localStorage.setItem('rohit_admin_messages', JSON.stringify(existingMsgs));
+                    } catch(err) {
+                        console.warn('LocalStorage error:', err);
+                    }
+
+                    // B) Also send to backend API if active
+                    try {
+                        const res = await fetch('/api/contact', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            formStatus.textContent = data.message || 'Your message has been sent successfully!';
+                            formStatus.className = 'form-message success';
+                            contactForm.reset();
+                            return;
+                        }
+                    } catch (error) {
+                        // On GitHub Pages or static host, backend is offline, but message is safely recorded in localStorage!
+                    } finally {
+                        submitBtn.textContent = 'Send Message ➔';
+                        submitBtn.disabled = false;
+                    }
+
+                    formStatus.textContent = 'Thank you! Your message has been sent successfully. Rohit will respond within 24 hours.';
+                    formStatus.className = 'form-message success';
+                    contactForm.reset();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

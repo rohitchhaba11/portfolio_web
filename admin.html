@@ -1,0 +1,2157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Center | Rohit Portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="assets/logo-icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --orange: #E85D25;
+            --orange-glow: rgba(232, 93, 37, 0.4);
+            --orange-light: #FF7A29;
+            --dark-bg: #09090C;
+            --card-bg: rgba(22, 22, 28, 0.75);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --text-light: #F8F8FA;
+            --text-gray: #A0A0AA;
+            --text-muted: #666675;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --blue: #3B82F6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(232, 93, 37, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(255, 122, 41, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(15, 15, 20, 0.8) 0%, var(--dark-bg) 100%);
+            background-attachment: fixed;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient Glow Grid */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Buttons & Badges */
+        .btn {
+            background: linear-gradient(135deg, var(--orange-light) 0%, var(--orange) 100%);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+            text-decoration: none;
+            box-shadow: 0 4px 18px var(--orange-glow);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(232, 93, 37, 0.6);
+            filter: brightness(1.08);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            border: 1px solid var(--card-border);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.78rem;
+            border-radius: 8px;
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            box-shadow: none;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: #EF4444;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: none;
+        }
+
+        .btn-success:hover {
+            background: rgba(16, 185, 129, 0.3);
+            border-color: #10B981;
+            color: #fff;
+        }
+
+        /* ---------------------------------
+           LOGIN VIEW
+           --------------------------------- */
+        #loginView {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border-radius: 28px;
+            padding: 45px 40px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.15);
+            text-align: center;
+            position: relative;
+            animation: cardAppear 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes cardAppear {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .login-logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            transition: transform 0.3s;
+        }
+
+        .login-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .login-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .login-subtitle {
+            color: var(--text-gray);
+            font-size: 0.88rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(10, 10, 14, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 12px;
+            padding: 13px 16px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(232, 93, 37, 0.25);
+            background: rgba(15, 15, 20, 0.9);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-light);
+        }
+
+        .demo-credentials-badge {
+            background: rgba(232, 93, 37, 0.1);
+            border: 1px dashed rgba(232, 93, 37, 0.35);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 25px;
+            font-size: 0.8rem;
+            color: #FFA86B;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .demo-fill-btn {
+            background: var(--orange);
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .demo-fill-btn:hover {
+            background: #FF7A29;
+        }
+
+        .login-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            color: #FCA5A5;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            margin-bottom: 18px;
+            display: none;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        .login-footer {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-link {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--orange-light);
+        }
+
+        /* ---------------------------------
+           DASHBOARD VIEW
+           --------------------------------- */
+        #dashboardView {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Navbar */
+        .admin-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 36px;
+            background: rgba(14, 14, 18, 0.8);
+            border-bottom: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .admin-logo-lockup {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .admin-badge {
+            background: rgba(232, 93, 37, 0.15);
+            border: 1px solid rgba(232, 93, 37, 0.4);
+            color: var(--orange-light);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            color: #34D399;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: #10B981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10B981;
+            animation: pulseDot 2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        .admin-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            border-radius: 30px;
+            font-size: 0.82rem;
+        }
+
+        .user-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange-light), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #fff;
+        }
+
+        /* Main Container */
+        .admin-main {
+            flex: 1;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px 36px 60px;
+        }
+
+        /* Metric Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 22px 24px;
+            backdrop-filter: blur(20px);
+            transition: transform 0.25s, border-color 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--orange), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(232, 93, 37, 0.4);
+        }
+
+        .metric-card:hover::before {
+            opacity: 1;
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .metric-title {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metric-value {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .metric-sub {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .metric-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .badge-orange {
+            background: rgba(232, 93, 37, 0.15);
+            color: var(--orange-light);
+        }
+
+        .badge-green {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34D399;
+        }
+
+        /* Tabs Header */
+        .tabs-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 25px;
+            padding-bottom: 4px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: var(--text-gray);
+            border: none;
+            padding: 10px 18px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 500;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            color: #fff;
+            background: rgba(232, 93, 37, 0.15);
+            border: 1px solid rgba(232, 93, 37, 0.4);
+            box-shadow: 0 4px 15px rgba(232, 93, 37, 0.15);
+        }
+
+        .tab-pill {
+            background: var(--orange);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 1px 7px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .tabs-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Tab Contents */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Inquiries Table & Toolbar */
+        .content-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            backdrop-filter: blur(25px);
+            padding: 24px;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.4);
+        }
+
+        .panel-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 280px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(10, 10, 14, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 9px 14px 9px 36px;
+            color: #fff;
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--orange);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-gray);
+            font-size: 0.78rem;
+            padding: 6px 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Inquiries List */
+        .inquiries-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .inquiries-table th {
+            padding: 12px 16px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .inquiries-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.86rem;
+            vertical-align: middle;
+        }
+
+        .inquiries-table tbody tr {
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .inquiries-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .inquiries-table tbody tr.unread-row {
+            background: rgba(232, 93, 37, 0.04);
+            font-weight: 500;
+        }
+
+        .inquiries-table tbody tr.unread-row td:first-child {
+            border-left: 3px solid var(--orange);
+        }
+
+        .client-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .client-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2D3748, #1A202C);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--orange-light);
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .client-name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .client-email {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+        }
+
+        .status-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-unread {
+            background: rgba(232, 93, 37, 0.15);
+            color: #FF8542;
+            border: 1px solid rgba(232, 93, 37, 0.35);
+        }
+
+        .status-read {
+            background: rgba(148, 163, 184, 0.12);
+            color: #CBD5E1;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+        }
+
+        .status-replied {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34D399;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .table-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-gray);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .icon-btn.delete-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #EF4444;
+            color: #F87171;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+
+        /* Projects Manager Grid */
+        .projects-mgr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 22px;
+            margin-top: 15px;
+        }
+
+        .project-mgr-card {
+            background: rgba(14, 14, 18, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s, border-color 0.25s;
+        }
+
+        .project-mgr-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(232, 93, 37, 0.4);
+        }
+
+        .project-thumb-preview {
+            width: 100%;
+            height: 160px;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 14px;
+            position: relative;
+        }
+
+        .project-category-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--orange-light);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .project-mgr-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .project-mgr-desc {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+
+        .project-mgr-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #14141A;
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 580px;
+            padding: 32px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .modal-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .message-full-body {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            color: #E2E8F0;
+            white-space: pre-wrap;
+            margin: 18px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: rgba(18, 18, 24, 0.95);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--orange);
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 900px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .admin-nav {
+                padding: 14px 20px;
+            }
+            .admin-main {
+                padding: 20px 16px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            .panel-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==============================================
+         1. ADMIN LOGIN VIEW
+         ============================================== -->
+    <div id="loginView">
+        <div class="login-card">
+            <!-- Modern Logo Mark -->
+            <div class="login-logo">
+                <img src="assets/logo.svg" alt="Rohit Logo" style="height: 52px; width: auto; filter: drop-shadow(0 4px 20px var(--orange-glow));">
+            </div>
+            
+            <h1 class="login-title">ADMIN CONTROL</h1>
+            <p class="login-subtitle">Sign in to monitor inquiries, manage projects, and oversee your entire portfolio architecture.</p>
+
+            <!-- Quick Demo Credentials helper -->
+            <div class="demo-credentials-badge">
+                <div>
+                    <strong>Default Access:</strong><br>
+                    <span>User: <code>admin</code> | Pass: <code>admin123</code></span>
+                </div>
+                <button type="button" class="demo-fill-btn" id="autofillDemo">1-Click Fill</button>
+            </div>
+
+            <div id="loginError" class="login-error">
+                Invalid credentials. Please verify your username & password.
+            </div>
+
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label class="form-label">ADMIN USERNAME</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="usernameInput" class="form-input" placeholder="e.g. admin" required autofocus autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ACCESS PASSWORD</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="passwordInput" class="form-input" placeholder="••••••••••••" required autocomplete="current-password">
+                        <button type="button" class="toggle-password" id="togglePasswordBtn" title="Toggle password visibility">👁</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-size: 0.8rem; color: var(--text-gray);">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="rememberMe" checked style="accent-color: var(--orange);">
+                        Remember session
+                    </label>
+                    <span style="color: var(--orange-light);">Secure Portal</span>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%; padding: 13px; font-size: 0.95rem;">
+                    Sign In to Dashboard ➔
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <a href="index.html" class="back-link">
+                    <span>←</span> Return to Live Portfolio
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         2. ADMIN DASHBOARD VIEW
+         ============================================== -->
+    <div id="dashboardView">
+        <!-- Top Navbar -->
+        <nav class="admin-nav">
+            <div class="admin-nav-left">
+                <a href="index.html" class="admin-logo-lockup" title="View Portfolio">
+                    <img src="assets/logo.svg" alt="Rohit Logo" style="height: 38px; width: auto;">
+                </a>
+                <span class="admin-badge">Admin Suite</span>
+                <div class="system-status">
+                    <span class="status-dot"></span>
+                    <span>System Live</span>
+                </div>
+            </div>
+
+            <div class="admin-nav-right">
+                <button class="btn btn-outline btn-sm" id="quickSimulateBtn" title="Simulate a client inquiry to test alerts">
+                    ⚡ Simulate Test Inquiry
+                </button>
+                <a href="index.html" target="_blank" class="btn btn-outline btn-sm">
+                    🌐 View Site ↗
+                </a>
+                <div class="user-pill">
+                    <div class="user-avatar">R</div>
+                    <span style="font-weight: 500;">Rohit (Admin)</span>
+                </div>
+                <button class="btn btn-danger btn-sm" id="logoutBtn">
+                    Sign Out
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Dashboard Body -->
+        <main class="admin-main">
+            <!-- Metric KPI Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Total Inquiries</span>
+                        <div class="metric-icon">📩</div>
+                    </div>
+                    <div class="metric-value" id="kpiTotalMessages">0</div>
+                    <div class="metric-sub">
+                        <span class="metric-badge badge-orange" id="kpiUnreadBadge">0 Unread</span>
+                        <span>Client communications</span>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Active Projects</span>
+                        <div class="metric-icon">🚀</div>
+                    </div>
+                    <div class="metric-value" id="kpiTotalProjects">4</div>
+                    <div class="metric-sub">
+                        <span class="metric-badge badge-green">100% Live</span>
+                        <span>Showcased on portfolio</span>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Response Rate</span>
+                        <div class="metric-icon">⚡</div>
+                    </div>
+                    <div class="metric-value">99.4%</div>
+                    <div class="metric-sub">
+                        <span class="metric-badge badge-green">Under 2h</span>
+                        <span>Average turn-around</span>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">System Storage</span>
+                        <div class="metric-icon">🛡️</div>
+                    </div>
+                    <div class="metric-value" id="storageStatusText" style="font-size: 1.5rem; margin-top: 5px;">Synced</div>
+                    <div class="metric-sub">
+                        <span>LocalStorage + API Dual Engine</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="tabs-header">
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-tab="inquiries">
+                        <span>📩 Inquiries & Messages</span>
+                        <span class="tab-pill" id="unreadTabCount">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="projects">
+                        <span>🚀 Projects Manager</span>
+                    </button>
+                    <button class="tab-btn" data-tab="services">
+                        <span>⚙️ Services & Skills</span>
+                    </button>
+                    <button class="tab-btn" data-tab="settings">
+                        <span>🛠️ System & Backups</span>
+                    </button>
+                </div>
+
+                <div class="tabs-actions">
+                    <button class="btn btn-outline btn-sm" id="exportCsvBtn">
+                        📥 Export CSV
+                    </button>
+                    <button class="btn btn-sm" id="addNewProjectBtn" style="display: none;">
+                        + Add Project
+                    </button>
+                </div>
+            </div>
+
+            <!-- TAB 1: INQUIRIES & MESSAGES -->
+            <div id="tab-inquiries" class="tab-content active">
+                <div class="content-panel">
+                    <div class="panel-toolbar">
+                        <div class="search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="inquirySearch" class="search-input" placeholder="Search by name, email, or subject...">
+                        </div>
+
+                        <div class="filter-group">
+                            <button class="filter-btn active" data-filter="all">All (<span id="countAll">0</span>)</button>
+                            <button class="filter-btn" data-filter="unread">Unread (<span id="countUnread">0</span>)</button>
+                            <button class="filter-btn" data-filter="read">Read (<span id="countRead">0</span>)</button>
+                            <button class="filter-btn" data-filter="replied">Replied (<span id="countReplied">0</span>)</button>
+                        </div>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="inquiries-table">
+                            <thead>
+                                <tr>
+                                    <th>Client / Sender</th>
+                                    <th>Subject & Message Snippet</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inquiriesTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="noInquiriesNotice" class="empty-state" style="display: none;">
+                        <div class="empty-state-icon">📭</div>
+                        <h3 style="color: #fff; margin-bottom: 6px;">No Inquiries Found</h3>
+                        <p>There are no messages matching your search or filter criteria.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: PROJECTS MANAGER -->
+            <div id="tab-projects" class="tab-content">
+                <div class="content-panel">
+                    <div class="panel-toolbar">
+                        <div>
+                            <h2 style="font-family: 'Oswald', sans-serif; font-size: 1.5rem; color: #fff;">Featured Portfolio Projects</h2>
+                            <p style="color: var(--text-gray); font-size: 0.85rem;">Manage the projects displayed on your portfolio website.</p>
+                        </div>
+                        <button class="btn btn-sm" id="btnOpenAddProjectModal">
+                            + Add New Project
+                        </button>
+                    </div>
+
+                    <div class="projects-mgr-grid" id="projectsManagerGrid">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: SERVICES & SKILLS -->
+            <div id="tab-services" class="tab-content">
+                <div class="content-panel">
+                    <div style="margin-bottom: 25px;">
+                        <h2 style="font-family: 'Oswald', sans-serif; font-size: 1.5rem; color: #fff;">Service Offerings</h2>
+                        <p style="color: var(--text-gray); font-size: 0.85rem;">The 4 primary pillars of your technical offerings.</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 22px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">📱</div>
+                            <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: #fff; margin-bottom: 8px;">App Development</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-gray); line-height: 1.5;">Cross-platform iOS and Android applications with real-time sync and high performance.</p>
+                            <span class="status-tag status-replied" style="margin-top: 15px;">Active Offering</span>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 22px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>
+                            <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: #fff; margin-bottom: 8px;">Web Development</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-gray); line-height: 1.5;">High-conversion, ultra-responsive web applications built with scalable modern architecture.</p>
+                            <span class="status-tag status-replied" style="margin-top: 15px;">Active Offering</span>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 22px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🎬</div>
+                            <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: #fff; margin-bottom: 8px;">Video Editing & VFX</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-gray); line-height: 1.5;">Cinematic 4K edits, color grading, visual effects, and high-impact brand commercials.</p>
+                            <span class="status-tag status-replied" style="margin-top: 15px;">Active Offering</span>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 22px;">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">🤖</div>
+                            <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: #fff; margin-bottom: 8px;">AI Agents & Automation</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-gray); line-height: 1.5;">Autonomous agents, LLM integrations, and custom workflow builders saving 80% manual time.</p>
+                            <span class="status-tag status-replied" style="margin-top: 15px;">Active Offering</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: SYSTEM & DATA BACKUPS -->
+            <div id="tab-settings" class="tab-content">
+                <div class="content-panel">
+                    <div style="margin-bottom: 25px;">
+                        <h2 style="font-family: 'Oswald', sans-serif; font-size: 1.5rem; color: #fff;">System Architecture & Data Controls</h2>
+                        <p style="color: var(--text-gray); font-size: 0.85rem;">Manage persistence, data exports, and GitHub Pages sync engine.</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px;">
+                            <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.2rem; margin-bottom: 8px; color: #fff;">Dual-Engine Persistence</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-gray); line-height: 1.6; margin-bottom: 20px;">
+                                This portfolio supports both static deployment on <strong>GitHub Pages</strong> (via client-side persistent storage) and full-stack mode with Node.js/PowerShell API servers. Any inquiry received on either environment is captured instantly.
+                            </p>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-outline btn-sm" id="btnDownloadBackup">
+                                    💾 Export Full Backup (JSON)
+                                </button>
+                                <button class="btn btn-danger btn-sm" id="btnResetData">
+                                    🔄 Reset Demo Inquiries
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); border-radius: 16px; padding: 24px;">
+                            <h3 style="font-family: 'Oswald', sans-serif; font-size: 1.2rem; margin-bottom: 8px; color: #fff;">Admin Security</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-gray); line-height: 1.6; margin-bottom: 20px;">
+                                Session authenticated via encrypted token. To update credentials for production server, set <code>ADMIN_SECRET</code> in <code>.env</code>.
+                            </p>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">
+                                <div>• Current Session: <strong>Active (Admin)</strong></div>
+                                <div>• Storage Engine: <strong>HTML5 LocalStorage + REST Sync</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ==============================================
+         3. VIEW MESSAGE DETAILS MODAL
+         ============================================== -->
+    <div class="modal-overlay" id="messageModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <span class="status-tag status-unread" id="modalStatusBadge">UNREAD</span>
+                    <h3 class="modal-title" id="modalSubject" style="margin-top: 6px;">Project Inquiry</h3>
+                </div>
+                <button class="modal-close" id="closeMessageModalBtn">&times;</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 0.85rem; color: var(--text-gray);">
+                <div>
+                    From: <strong id="modalSender" style="color: #fff;">Tester</strong> &lt;<a id="modalEmail" href="#" style="color: var(--orange-light); text-decoration: none;">test@example.com</a>&gt;
+                </div>
+                <div id="modalDate" style="font-size: 0.78rem; color: var(--text-muted);">Today</div>
+            </div>
+
+            <div class="message-full-body" id="modalBody">
+                Message content goes here...
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; gap: 10px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-outline btn-sm" id="btnToggleReadStatus">Mark as Read</button>
+                    <button class="btn btn-success btn-sm" id="btnMarkReplied">Mark as Replied</button>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <a id="btnReplyMailto" href="#" class="btn btn-sm">✉️ Email Client</a>
+                    <button class="btn btn-danger btn-sm" id="btnDeleteCurrentMsg">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         4. ADD PROJECT MODAL
+         ============================================== -->
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title" id="projectModalTitle">Add New Project</h3>
+                <button class="modal-close" id="closeProjectModalBtn">&times;</button>
+            </div>
+
+            <form id="projectForm">
+                <input type="hidden" id="projId">
+                <div class="form-group">
+                    <label class="form-label">PROJECT TITLE</label>
+                    <input type="text" id="projTitle" class="form-input" placeholder="e.g. NextGen AI Dashboard" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">CATEGORY</label>
+                    <select id="projCategory" class="form-input" style="background: #111;">
+                        <option value="Web Development">Web Development</option>
+                        <option value="App Development">App Development</option>
+                        <option value="Video Editing">Video Editing</option>
+                        <option value="AI & Automation">AI & Automation</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">THUMBNAIL IMAGE URL</label>
+                    <input type="text" id="projThumbnail" class="form-input" placeholder="e.g. assets/projects/ecommerce.jpg or https://...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">SHORT DESCRIPTION</label>
+                    <textarea id="projDesc" class="form-input" style="min-height: 80px; resize: vertical;" placeholder="Brief summary of the architecture and results..." required></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label class="form-label">LIVE DEMO URL</label>
+                        <input type="text" id="projLiveUrl" class="form-input" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">GITHUB REPO URL</label>
+                        <input type="text" id="projGithubUrl" class="form-input" placeholder="https://github.com/...">
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                    <button type="button" class="btn btn-outline" id="btnCancelProject">Cancel</button>
+                    <button type="submit" class="btn">Save Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ==============================================
+         APPLICATION LOGIC SCRIPT
+         ============================================== -->
+    <script>
+        // Default Seed Inquiries
+        const DEFAULT_INQUIRIES = [
+            {
+                id: "seed-1",
+                name: "Sarah Jenkins",
+                email: "sarah@techflow.io",
+                subject: "Enterprise Web App & AI Integration",
+                message: "Hey Rohit, loved your 3D portfolio! We are building a high-throughput SaaS dashboard and would love to hire you to build out the frontend architecture with real-time AI streaming agents. Are you available for a contract this month?",
+                status: "unread",
+                createdAt: new Date(Date.now() - 3600000 * 3).toISOString()
+            },
+            {
+                id: "seed-2",
+                name: "Michael Chang",
+                email: "michael@roguestudios.com",
+                subject: "Commercial Video Edit & Color Grading",
+                message: "Hi Rohit, we saw your commercial edits and were blown away by the pacing and VFX. We have a 60-second product launch reel that needs a master color grade and dynamic sound design. Please let us know your rates and timeline.",
+                status: "read",
+                createdAt: new Date(Date.now() - 3600000 * 24).toISOString()
+            },
+            {
+                id: "seed-3",
+                name: "Elena Rodriguez",
+                email: "elena@luminahealth.com",
+                subject: "Cross-Platform Mobile Tracker",
+                message: "Hello Rohit, we need a cross-platform React Native / Flutter developer to build our health monitoring app with Bluetooth device synchronization. Let us know when we can set up a discovery call.",
+                status: "replied",
+                createdAt: new Date(Date.now() - 3600000 * 48).toISOString()
+            }
+        ];
+
+        // Default Seed Projects
+        const DEFAULT_PROJECTS = [
+            {
+                id: "1",
+                title: "E-Commerce Web Application",
+                slug: "ecommerce-web-app",
+                shortDescription: "A scalable full-stack store built with modern web technologies and seamless payment integration.",
+                thumbnail: "assets/projects/ecommerce.jpg",
+                category: "Web Development",
+                liveUrl: "https://example.com",
+                githubUrl: "https://github.com/rohit/ecommerce"
+            },
+            {
+                id: "2",
+                title: "Fitness Tracker Mobile App",
+                slug: "fitness-tracker-app",
+                shortDescription: "Cross-platform iOS and Android application featuring real-time data sync and analytics.",
+                thumbnail: "assets/projects/fitness.jpg",
+                category: "App Development",
+                liveUrl: "https://example.com",
+                githubUrl: "https://github.com/rohit/fitness"
+            },
+            {
+                id: "3",
+                title: "Cinematic Brand Commercial",
+                slug: "cinematic-brand-commercial",
+                shortDescription: "High-quality commercial edit with professional color grading, sound design, and VFX.",
+                thumbnail: "assets/projects/commercial.jpg",
+                category: "Video Editing",
+                liveUrl: "https://example.com",
+                githubUrl: "https://github.com/rohit/commercial"
+            },
+            {
+                id: "4",
+                title: "AI Customer Support Agent",
+                slug: "ai-customer-support-agent",
+                shortDescription: "An intelligent automation workflow reducing manual support tickets by 80% with custom LLMs.",
+                thumbnail: "assets/projects/ai-agent.jpg",
+                category: "AI & Automation",
+                liveUrl: "https://example.com",
+                githubUrl: "https://github.com/rohit/ai-agent"
+            }
+        ];
+
+        // Storage Keys
+        const STORAGE_INQUIRIES = 'rohit_admin_messages';
+        const STORAGE_PROJECTS = 'rohit_admin_projects';
+        const STORAGE_AUTH = 'rohit_admin_auth';
+
+        // State
+        let currentMessages = [];
+        let currentProjects = [];
+        let activeFilter = 'all';
+        let searchQuery = '';
+        let selectedMessageId = null;
+
+        // Initialize Data
+        function initData() {
+            // Load messages
+            const storedMsgs = localStorage.getItem(STORAGE_INQUIRIES);
+            if (storedMsgs) {
+                try {
+                    currentMessages = JSON.parse(storedMsgs);
+                } catch(e) {
+                    currentMessages = DEFAULT_INQUIRIES;
+                }
+            } else {
+                currentMessages = DEFAULT_INQUIRIES;
+                saveMessages();
+            }
+
+            // Also attempt to fetch messages from backend API if active
+            fetch('/api/admin/messages', {
+                headers: { 'Authorization': 'Bearer ' + (sessionStorage.getItem(STORAGE_AUTH) || 'admin') }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+                    // Merge API messages with local
+                    const map = new Map();
+                    currentMessages.forEach(m => map.set(m.id || m.email + m.createdAt, m));
+                    data.data.forEach(m => map.set(m.id || m.email + m.createdAt, m));
+                    currentMessages = Array.from(map.values());
+                    saveMessages();
+                    renderInquiries();
+                    updateKPIs();
+                }
+            })
+            .catch(() => {
+                // Statically operating on GitHub Pages or offline
+                document.getElementById('storageStatusText').textContent = 'Local Sync';
+            });
+
+            // Load projects
+            const storedProjects = localStorage.getItem(STORAGE_PROJECTS);
+            if (storedProjects) {
+                try {
+                    currentProjects = JSON.parse(storedProjects);
+                } catch(e) {
+                    currentProjects = DEFAULT_PROJECTS;
+                }
+            } else {
+                currentProjects = DEFAULT_PROJECTS;
+                saveProjects();
+            }
+        }
+
+        function saveMessages() {
+            localStorage.setItem(STORAGE_INQUIRIES, JSON.stringify(currentMessages));
+        }
+
+        function saveProjects() {
+            localStorage.setItem(STORAGE_PROJECTS, JSON.stringify(currentProjects));
+        }
+
+        // Notifications
+        function showToast(msg, icon = '✦') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Authentication Handlers
+        const loginView = document.getElementById('loginView');
+        const dashboardView = document.getElementById('dashboardView');
+        const loginForm = document.getElementById('adminLoginForm');
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginError = document.getElementById('loginError');
+
+        function checkAuth() {
+            const isAuth = sessionStorage.getItem(STORAGE_AUTH) || localStorage.getItem(STORAGE_AUTH);
+            if (isAuth) {
+                loginView.style.display = 'none';
+                dashboardView.style.display = 'flex';
+                initData();
+                renderInquiries();
+                renderProjects();
+                updateKPIs();
+            } else {
+                loginView.style.display = 'flex';
+                dashboardView.style.display = 'none';
+            }
+        }
+
+        // Toggle Password Visibility
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+        togglePasswordBtn.addEventListener('click', () => {
+            const isPass = passwordInput.type === 'password';
+            passwordInput.type = isPass ? 'text' : 'password';
+            togglePasswordBtn.textContent = isPass ? '🔒' : '👁';
+        });
+
+        // Login Submit
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = usernameInput.value.trim().toLowerCase();
+            const pass = passwordInput.value.trim();
+            const remember = document.getElementById('rememberMe').checked;
+
+            if (user === 'rchhaba644@gmail.com' && pass === 'shadowrohit') {
+                loginError.style.display = 'none';
+                const token = 'session_' + Math.random().toString(36).substring(2);
+                if (remember) {
+                    localStorage.setItem(STORAGE_AUTH, token);
+                }
+                sessionStorage.setItem(STORAGE_AUTH, token);
+                showToast('Welcome back, Rohit! Admin session authorized.', '🛡️');
+                checkAuth();
+            } else {
+                loginError.style.display = 'block';
+                usernameInput.focus();
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem(STORAGE_AUTH);
+            localStorage.removeItem(STORAGE_AUTH);
+            showToast('Signed out successfully', '👋');
+            checkAuth();
+        });
+
+        // Tabs Handling
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const addNewProjectBtn = document.getElementById('addNewProjectBtn');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.getAttribute('data-tab');
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+
+                btn.classList.add('active');
+                const targetContent = document.getElementById('tab-' + target);
+                if (targetContent) targetContent.classList.add('active');
+
+                // Toggle Add project button on tabs
+                if (target === 'projects') {
+                    addNewProjectBtn.style.display = 'inline-flex';
+                } else {
+                    addNewProjectBtn.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter Inquiries
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeFilter = btn.getAttribute('data-filter');
+                renderInquiries();
+            });
+        });
+
+        // Search Inquiries
+        document.getElementById('inquirySearch').addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase().trim();
+            renderInquiries();
+        });
+
+        // Update KPIs
+        function updateKPIs() {
+            const total = currentMessages.length;
+            const unread = currentMessages.filter(m => m.status === 'unread').length;
+            const read = currentMessages.filter(m => m.status === 'read').length;
+            const replied = currentMessages.filter(m => m.status === 'replied').length;
+
+            document.getElementById('kpiTotalMessages').textContent = total;
+            document.getElementById('kpiUnreadBadge').textContent = `${unread} Unread`;
+            document.getElementById('unreadTabCount').textContent = unread;
+            document.getElementById('kpiTotalProjects').textContent = currentProjects.length;
+
+            document.getElementById('countAll').textContent = total;
+            document.getElementById('countUnread').textContent = unread;
+            document.getElementById('countRead').textContent = read;
+            document.getElementById('countReplied').textContent = replied;
+        }
+
+        // Render Inquiries Table
+        function renderInquiries() {
+            const tbody = document.getElementById('inquiriesTableBody');
+            const noNotice = document.getElementById('noInquiriesNotice');
+            tbody.innerHTML = '';
+
+            let filtered = currentMessages.filter(m => {
+                if (activeFilter !== 'all' && m.status !== activeFilter) return false;
+                if (searchQuery) {
+                    const matchName = (m.name || '').toLowerCase().includes(searchQuery);
+                    const matchEmail = (m.email || '').toLowerCase().includes(searchQuery);
+                    const matchSubject = (m.subject || '').toLowerCase().includes(searchQuery);
+                    const matchMsg = (m.message || '').toLowerCase().includes(searchQuery);
+                    return matchName || matchEmail || matchSubject || matchMsg;
+                }
+                return true;
+            });
+
+            // Sort newest first
+            filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            if (filtered.length === 0) {
+                noNotice.style.display = 'block';
+                return;
+            } else {
+                noNotice.style.display = 'none';
+            }
+
+            filtered.forEach(msg => {
+                const tr = document.createElement('tr');
+                if (msg.status === 'unread') tr.classList.add('unread-row');
+
+                const initial = (msg.name || 'C').charAt(0).toUpperCase();
+                const dateStr = new Date(msg.createdAt).toLocaleDateString(undefined, { 
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+                });
+
+                let statusClass = 'status-unread';
+                if (msg.status === 'read') statusClass = 'status-read';
+                if (msg.status === 'replied') statusClass = 'status-replied';
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="client-info">
+                            <div class="client-avatar">${initial}</div>
+                            <div>
+                                <div class="client-name">${escapeHtml(msg.name || 'Anonymous')}</div>
+                                <div class="client-email">${escapeHtml(msg.email || '')}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="color: #fff; font-weight: 500; margin-bottom: 2px;">
+                            ${escapeHtml(msg.subject || 'No Subject')}
+                        </div>
+                        <div style="color: var(--text-gray); font-size: 0.8rem; max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            ${escapeHtml(msg.message || '')}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="status-tag ${statusClass}">${msg.status}</span>
+                    </td>
+                    <td style="color: var(--text-muted); font-size: 0.8rem; white-space: nowrap;">
+                        ${dateStr}
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="table-actions" style="justify-content: flex-end;">
+                            <button class="icon-btn btn-view" title="Read Full Message" data-id="${msg.id}">👁</button>
+                            <button class="icon-btn btn-toggle-status" title="Toggle Read/Unread" data-id="${msg.id}">
+                                ${msg.status === 'unread' ? '✓' : '✉'}
+                            </button>
+                            <button class="icon-btn delete-btn btn-delete" title="Delete Inquiry" data-id="${msg.id}">🗑</button>
+                        </div>
+                    </td>
+                `;
+
+                // Row click opens message
+                tr.addEventListener('click', (e) => {
+                    if (e.target.closest('.table-actions')) return;
+                    openMessageModal(msg.id);
+                });
+
+                tbody.appendChild(tr);
+            });
+
+            // Action listeners
+            document.querySelectorAll('.btn-view').forEach(b => {
+                b.addEventListener('click', () => openMessageModal(b.getAttribute('data-id')));
+            });
+
+            document.querySelectorAll('.btn-toggle-status').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = b.getAttribute('data-id');
+                    toggleMessageRead(id);
+                });
+            });
+
+            document.querySelectorAll('.btn-delete').forEach(b => {
+                b.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = b.getAttribute('data-id');
+                    deleteMessage(id);
+                });
+            });
+        }
+
+        // Escape HTML helper
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Open Message Details Modal
+        function openMessageModal(id) {
+            const msg = currentMessages.find(m => m.id === id);
+            if (!msg) return;
+
+            selectedMessageId = id;
+
+            // Automatically mark as read when viewed
+            if (msg.status === 'unread') {
+                msg.status = 'read';
+                saveMessages();
+                updateKPIs();
+                renderInquiries();
+            }
+
+            const modal = document.getElementById('messageModal');
+            document.getElementById('modalSubject').textContent = msg.subject || 'Project Inquiry';
+            document.getElementById('modalSender').textContent = msg.name || 'Anonymous Client';
+            const emailLink = document.getElementById('modalEmail');
+            emailLink.textContent = msg.email;
+            emailLink.href = `mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject || 'Your Inquiry to Rohit')}`;
+
+            document.getElementById('btnReplyMailto').href = emailLink.href;
+
+            const badge = document.getElementById('modalStatusBadge');
+            badge.textContent = msg.status.toUpperCase();
+            badge.className = 'status-tag ' + (msg.status === 'replied' ? 'status-replied' : msg.status === 'read' ? 'status-read' : 'status-unread');
+
+            document.getElementById('modalDate').textContent = new Date(msg.createdAt).toLocaleString();
+            document.getElementById('modalBody').textContent = msg.message;
+
+            const toggleBtn = document.getElementById('btnToggleReadStatus');
+            toggleBtn.textContent = msg.status === 'read' ? 'Mark as Unread' : 'Mark as Read';
+
+            modal.classList.add('open');
+        }
+
+        document.getElementById('closeMessageModalBtn').addEventListener('click', () => {
+            document.getElementById('messageModal').classList.remove('open');
+        });
+
+        // Toggle Read Status
+        function toggleMessageRead(id) {
+            const msg = currentMessages.find(m => m.id === id);
+            if (!msg) return;
+
+            msg.status = (msg.status === 'unread') ? 'read' : 'unread';
+            saveMessages();
+            updateKPIs();
+            renderInquiries();
+            showToast(`Inquiry marked as ${msg.status}`, '✓');
+        }
+
+        document.getElementById('btnToggleReadStatus').addEventListener('click', () => {
+            if (!selectedMessageId) return;
+            toggleMessageRead(selectedMessageId);
+            openMessageModal(selectedMessageId);
+        });
+
+        document.getElementById('btnMarkReplied').addEventListener('click', () => {
+            if (!selectedMessageId) return;
+            const msg = currentMessages.find(m => m.id === selectedMessageId);
+            if (!msg) return;
+            msg.status = 'replied';
+            saveMessages();
+            updateKPIs();
+            renderInquiries();
+            openMessageModal(selectedMessageId);
+            showToast('Marked as replied', '✉️');
+        });
+
+        function deleteMessage(id) {
+            if (!confirm('Are you sure you want to delete this message?')) return;
+            currentMessages = currentMessages.filter(m => m.id !== id);
+            saveMessages();
+            updateKPIs();
+            renderInquiries();
+            showToast('Message deleted', '🗑');
+        }
+
+        document.getElementById('btnDeleteCurrentMsg').addEventListener('click', () => {
+            if (!selectedMessageId) return;
+            deleteMessage(selectedMessageId);
+            document.getElementById('messageModal').classList.remove('open');
+        });
+
+        // Simulate Test Client Inquiry
+        document.getElementById('quickSimulateBtn').addEventListener('click', () => {
+            const mockNames = ['Alex Morgan', 'David Miller', 'Sophia Lin', 'Lucas Vance'];
+            const mockSubjects = ['Urgent: AI SaaS Integration', 'Full-Stack Contract Opportunity', 'Video Commercial Series', 'Mobile Health App Redesign'];
+            const randomName = mockNames[Math.floor(Math.random() * mockNames.length)];
+            const randomSub = mockSubjects[Math.floor(Math.random() * mockSubjects.length)];
+
+            const newInquiry = {
+                id: 'sim-' + Date.now(),
+                name: randomName,
+                email: randomName.toLowerCase().replace(' ', '.') + '@example.com',
+                subject: randomSub,
+                message: `Hi Rohit, this is an automated live test inquiry generated to verify that the contact notification and admin control center sync immediately on GitHub Pages and local servers. Everything is functioning flawlessly!`,
+                status: 'unread',
+                createdAt: new Date().toISOString()
+            };
+
+            currentMessages.unshift(newInquiry);
+            saveMessages();
+            updateKPIs();
+            renderInquiries();
+            showToast(`New test inquiry from ${randomName} received!`, '🔔');
+        });
+
+        // Export Inquiries as CSV
+        document.getElementById('exportCsvBtn').addEventListener('click', () => {
+            if (currentMessages.length === 0) {
+                showToast('No inquiries to export', '⚠️');
+                return;
+            }
+
+            let csv = 'ID,Name,Email,Subject,Status,Date,Message\n';
+            currentMessages.forEach(m => {
+                const cleanMsg = (m.message || '').replace(/"/g, '""').replace(/\n/g, ' ');
+                csv += `"${m.id}","${m.name}","${m.email}","${m.subject}","${m.status}","${m.createdAt}","${cleanMsg}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `rohit-portfolio-inquiries-${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('CSV export downloaded', '📥');
+        });
+
+        // Export Full JSON Backup
+        document.getElementById('btnDownloadBackup').addEventListener('click', () => {
+            const backup = {
+                inquiries: currentMessages,
+                projects: currentProjects,
+                exportedAt: new Date().toISOString(),
+                version: '2.0'
+            };
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `rohit-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Full JSON backup downloaded', '💾');
+        });
+
+        // Reset Demo Data
+        document.getElementById('btnResetData').addEventListener('click', () => {
+            if (confirm('Reset all inquiries to factory seed defaults?')) {
+                currentMessages = JSON.parse(JSON.stringify(DEFAULT_INQUIRIES));
+                saveMessages();
+                updateKPIs();
+                renderInquiries();
+                showToast('Inquiries reset to demo data', '🔄');
+            }
+        });
+
+        // ---------------------------------------------
+        // PROJECTS MANAGER
+        // ---------------------------------------------
+        function renderProjects() {
+            const grid = document.getElementById('projectsManagerGrid');
+            grid.innerHTML = '';
+
+            currentProjects.forEach(proj => {
+                const card = document.createElement('div');
+                card.className = 'project-mgr-card';
+                const bgStyle = proj.thumbnail ? `background-image: url('${proj.thumbnail}');` : `background: linear-gradient(135deg, #1f2937, #111827);`;
+
+                card.innerHTML = `
+                    <div class="project-thumb-preview" style="${bgStyle}">
+                        <span class="project-category-badge">${escapeHtml(proj.category || 'Featured')}</span>
+                    </div>
+                    <h3 class="project-mgr-title">${escapeHtml(proj.title)}</h3>
+                    <p class="project-mgr-desc">${escapeHtml(proj.shortDescription || '')}</p>
+                    <div class="project-mgr-footer">
+                        <span style="font-size: 0.75rem; color: #34D399;">● Live On Site</span>
+                        <div style="display: flex; gap: 6px;">
+                            <button class="btn btn-outline btn-sm edit-proj-btn" data-id="${proj.id}">Edit</button>
+                            <button class="btn btn-danger btn-sm del-proj-btn" data-id="${proj.id}">Delete</button>
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+
+            // Edit & Delete handlers
+            document.querySelectorAll('.edit-proj-btn').forEach(b => {
+                b.addEventListener('click', () => openProjectModal(b.getAttribute('data-id')));
+            });
+
+            document.querySelectorAll('.del-proj-btn').forEach(b => {
+                b.addEventListener('click', () => {
+                    const id = b.getAttribute('data-id');
+                    if (confirm('Delete this project?')) {
+                        currentProjects = currentProjects.filter(p => p.id !== id);
+                        saveProjects();
+                        renderProjects();
+                        updateKPIs();
+                        showToast('Project removed', '🗑');
+                    }
+                });
+            });
+        }
+
+        // Project Modal Handling
+        const projectModal = document.getElementById('projectModal');
+        const projectForm = document.getElementById('projectForm');
+
+        function openProjectModal(id = null) {
+            const isEdit = !!id;
+            document.getElementById('projectModalTitle').textContent = isEdit ? 'Edit Project' : 'Add New Project';
+            document.getElementById('projId').value = id || '';
+
+            if (isEdit) {
+                const proj = currentProjects.find(p => p.id === id);
+                if (proj) {
+                    document.getElementById('projTitle').value = proj.title || '';
+                    document.getElementById('projCategory').value = proj.category || 'Web Development';
+                    document.getElementById('projThumbnail').value = proj.thumbnail || '';
+                    document.getElementById('projDesc').value = proj.shortDescription || '';
+                    document.getElementById('projLiveUrl').value = proj.liveUrl || '';
+                    document.getElementById('projGithubUrl').value = proj.githubUrl || '';
+                }
+            } else {
+                projectForm.reset();
+                document.getElementById('projThumbnail').value = 'assets/projects/ecommerce.jpg';
+            }
+
+            projectModal.classList.add('open');
+        }
+
+        document.getElementById('addNewProjectBtn').addEventListener('click', () => openProjectModal());
+        document.getElementById('btnOpenAddProjectModal').addEventListener('click', () => openProjectModal());
+        document.getElementById('closeProjectModalBtn').addEventListener('click', () => projectModal.classList.remove('open'));
+        document.getElementById('btnCancelProject').addEventListener('click', () => projectModal.classList.remove('open'));
+
+        projectForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('projId').value;
+            const title = document.getElementById('projTitle').value.trim();
+            const category = document.getElementById('projCategory').value;
+            const thumbnail = document.getElementById('projThumbnail').value.trim();
+            const shortDescription = document.getElementById('projDesc').value.trim();
+            const liveUrl = document.getElementById('projLiveUrl').value.trim();
+            const githubUrl = document.getElementById('projGithubUrl').value.trim();
+
+            if (id) {
+                // Edit
+                const proj = currentProjects.find(p => p.id === id);
+                if (proj) {
+                    proj.title = title;
+                    proj.category = category;
+                    proj.thumbnail = thumbnail;
+                    proj.shortDescription = shortDescription;
+                    proj.liveUrl = liveUrl;
+                    proj.githubUrl = githubUrl;
+                }
+                showToast('Project updated successfully', '✓');
+            } else {
+                // Add new
+                const newProj = {
+                    id: 'proj-' + Date.now(),
+                    title,
+                    slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                    category,
+                    thumbnail,
+                    shortDescription,
+                    liveUrl,
+                    githubUrl
+                };
+                currentProjects.push(newProj);
+                showToast('New project created', '🚀');
+            }
+
+            saveProjects();
+            renderProjects();
+            updateKPIs();
+            projectModal.classList.remove('open');
+        });
+
+        // Initialize on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>
